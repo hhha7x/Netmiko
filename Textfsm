@@ -1,0 +1,21 @@
+from netmiko import ConnectHandler
+from textfsm import TextFSM
+
+with open ('Devices.txt') as Devices
+    for IP in Devices:
+        Device = {
+            'device_type': 'cisco_ios',
+            'ip' : IP
+            'username': 'user'
+            'password': 'password
+         }
+         
+         netconnect = ConnectHandler(**Device)
+         print ('Connecting to ' = IP)
+         print('-'*79)
+         output = net_connect.send_command('show int status',use_textfsm=True)
+         print(output)
+         print()
+         print('-'*79)
+         
+net_connect.disconnect()         
