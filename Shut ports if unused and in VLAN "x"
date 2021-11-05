@@ -1,0 +1,34 @@
+from netmiko import ConnectHandler
+from textfsm import TextFSM
+from netmiko.ssh_exception import NetMikoTimeoutException
+from paramiko.ssh_exception import SSHException
+from netmiko.ssh_exception import AuthenticationException
+
+with open ('devices.txt') as routers:
+ for IP in routers:
+    Router = {
+        'device_type': 'cisco_ios',
+        'ip' : IP,
+        'username': 'user',
+        'password': 'passwprd'
+     }
+
+    try:
+     net_connect = ConnectHandler(**Router)
+    except (NetMikoTimeoutException):
+     print ('Timeout to device' + IP)
+     continue
+
+
+    netconnect = ConnectHandler(**Router)
+    print('-'*79)
+    output = netconnect.send_command('show int status',use_textfsm=True)
+    for i in output:
+         if i["vlan"] == "100" and i["status"] == "notconnect":
+            config_set = ['interface ' + i["port"], 'shutdown']
+            x = netconnect.send_config_set(config_set)
+    print(output)
+    print()
+    print('-'*79)
+
+netconnect.disconnect()
